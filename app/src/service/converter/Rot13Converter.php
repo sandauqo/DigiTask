@@ -2,10 +2,12 @@
 
 namespace App\Service\Converter;
 
-class Rot13Converter
+use App\Service\Converter\Converter;
+
+class Rot13Converter implements Converter
 {
 
-    public function convert($string): string
+    public function convert(string $string): string
     {
         $converted = '';
         foreach (str_split($string) as $char) {

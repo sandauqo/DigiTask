@@ -7,9 +7,14 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class ArrayGenerator
 {
-    function __construct(public $array_length, public $string_length) {}
+    function __construct(private int $array_length, private int $string_length)
+    {
+    }
 
-    public function generate(): array
+    /**
+     * @return array<string> 
+     */
+    public function generate()
     {
         $container = new ContainerBuilder();
         $container

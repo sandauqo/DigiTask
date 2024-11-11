@@ -4,26 +4,42 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use App\Service\Converter\Rot13Converter;
 use App\Service\Converter\PatternConverter;
+use App\Service\Collection\GeneratorCollection;
+use App\Service\Collection\ConverterCollection;
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 $container = new ContainerBuilder();
 $container
-    ->register('alphanum_generator', 'App\Service\Generator\AlphanumericGenerator')
-    ->addArgument(1);
+    ->register('alphanum1', 'App\Service\Generator\AlphanumericGenerator')
+    ->addArgument(5);
 
 $container
-    ->register('array_generator', 'App\Service\Generator\ArrayGenerator')
-    ->addArgument(10)
-    ->addArgument(30);
+    ->register('alphanum2', 'App\Service\Generator\AlphanumericGenerator')
+    ->addArgument(10);
 
-echo $container->get('alphanum_generator')->generate();
+$container
+    ->register('alphanum3', 'App\Service\Generator\AlphanumericGenerator')
+    ->addArgument(15);    
 
-echo '<pre>'; print_r($container->get('array_generator')->generate()); echo '</pre>';
 
-$rotConverter = new Rot13Converter();
-$string = 'ABCDIFGHIJKLMNOPQRSTUVWXYZ';
-echo $rotConverter->convert($string);
+$container->register('pattern_converter', 'App\Service\Converter\PatternConverter');
+$container->register('rot13_converter', 'App\Service\Converter\Rot13Converter');
 
-$patternConverter = new PatternConverter();
-echo $patternConverter->convert('22aAcd22sdfg897sdfg98');
+
+$generators = new GeneratorCollection();
+$generators->add($container->get('alphanum1'));
+$generators->add($container->get('alphanum2'));
+$generators->add($container->get('alphanum3'));
+
+$converters = new ConverterCollection();
+$converters->add($container->get('pattern_converter'));
+$converters->add($container->get('rot13_converter'));
+
+foreach ($generators as $generator) {
+    $random_string = $generator->generate();
+    echo $random_string;
+    echo '<br>';
+    echo $converters->getRandomConverter()->convert($random_string);
+    echo '<br>';
+}

@@ -2,21 +2,26 @@
 
 namespace App\Service\Generator;
 
-class AlphanumericGenerator
+use App\Service\Generator\Generator;
+
+class AlphanumericGenerator implements Generator
 {
-    function __construct(public $length) {}
+    function __construct(private int $length)
+    {
+    }
 
     public function generate(): string
     {
         $string = '';
         for ($i = 0; $i < $this->length; $i++) {
-            $random_int = $this->getRandomChar();
+            $random_int = $this->_getRandomChar();
             $string .= chr($random_int);
         }
         return $string;
     }
 
-    private function getRandomChar(): int {
+    private function _getRandomChar(): int
+    {
         // Digits: ASCII codes 48 to 57 represent the digits 0 to 9.
         // Uppercase Letters: ASCII codes 65 to 90 represent uppercase letters from ‘A’ to ‘Z’.
         // Lowercase Letters: ASCII codes 97 to 122 represent lowercase letters from ‘a’ to ‘z’.
